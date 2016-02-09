@@ -7,10 +7,11 @@ import settings
 import requests
 import json
 import os
+import sys
 
-def getUrls( word, key, skip=0, urls=[] ):
-    
-    print "Samples:", len(urls)
+def getUrls( word, key, skip=0, urls=[]):
+    sys.stdout.write("\rSamples: "+str(len(urls)))
+
     prefix = 'https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Image'
     params = {
             'Query': "'%s'" % word , 
@@ -30,22 +31,39 @@ def getUrls( word, key, skip=0, urls=[] ):
             urls.append( result['MediaUrl'] )
 
     if results['d'].has_key( '__next' ):
-        return getUrls( word, key, skip=skip+50, urls=urls)
-    else:
-        return urls
+        getUrls( word, key, skip+50 )
+
+    if skip == 0:
+         sys.stdout.write("\n")
+
+    return urls
 
 def saveImages( urls, dir ):
+    count = 0
+    skip = 0
+    sys.stdout.write("Saving "+str(len(urls))+" image(s)")
     for url in urls:
         try:
             path = os.path.join( dir, os.path.basename( url ) )
+            count += 1
+            if count%5==0:
+                sys.stdout.write(".")
+            if count%50==0:
+                sys.stdout.write(str(count))
             if not os.path.exists(path): # ファイル名が被った場合は保存しない
                 img = requests.get( url ).content
                 f = open( path, 'wb' )
                 f.write( img )
                 img.close()
                 f.close()
+            else:
+                skip+=1
         except:
             pass
+    if skip>0:
+      sys.stdout.write("done.(Skip "+str(skip)+" images)\n")
+    else:
+      sys.stdout.write("done.\n")
 
 if __name__ == '__main__':
     word = settings.word
