@@ -35,6 +35,9 @@ def index():
 
     #最初の画像
     imgsrc = os.path.join( image_dir, images[pos] )
+    imgsrc = re.sub(r'\\', '/', imgsrc)
+    imgsrc = re.sub(r'%', '%25', imgsrc)
+
     imgnum = len(images)
     count = pos
     counter = ''.join( [ str(pos+1).zfill( len(str(imgnum)) ), ' of ', str(imgnum) ] )
@@ -57,6 +60,8 @@ def _next():
 
         #処理中の画像のパス
         image_path = os.path.join( image_dir, images[pos] )
+        image_path = re.sub(r'\\', '/', image_path)
+        image_path = re.sub(r'%', '%25', image_path)
 
         #正例か負例か
         if len(coords) == 0:
@@ -84,6 +89,8 @@ def _next():
     else:
         finished = False
         imgsrc = os.path.join( image_dir, images[pos+1] )
+        imgsrc = re.sub(r'\\', '/', imgsrc)
+        imgsrc = re.sub(r'%', '%25', imgsrc)
         pos = pos + 1
 
     return jsonify( imgsrc=imgsrc, finished=finished, count=pos ) 
