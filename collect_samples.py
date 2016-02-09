@@ -37,11 +37,13 @@ def getUrls( word, key, skip=0, urls=[] ):
 def saveImages( urls, dir ):
     for url in urls:
         try:
-            img = requests.get( url ).content
-            f = open( os.path.join( dir, os.path.basename( url ) ), 'wb' )
-            f.write( img )
-            img.close()
-            f.close()
+            path = os.path.join( dir, os.path.basename( url ) )
+            if not os.path.exists(path): # ファイル名が被った場合は保存しない
+                img = requests.get( url ).content
+                f = open( path, 'wb' )
+                f.write( img )
+                img.close()
+                f.close()
         except:
             pass
 
@@ -52,4 +54,3 @@ if __name__ == '__main__':
 
     urls = getUrls( word, key )
     saveImages( urls, dir )
-
