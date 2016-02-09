@@ -22,7 +22,7 @@ def getUrls( word, key, skip=0, urls=[] ):
         params.update( { '$skip': str( skip ) } )
 
     results = requests.get( prefix, auth=( key, key ), params=params )
-    results = results.json
+    results = results.json()
 
     for result in results['d']['results']:
         typ = result[ 'ContentType' ]
