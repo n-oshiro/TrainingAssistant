@@ -2,7 +2,7 @@
 
 1. Clone to your computer: 
 
-		% git clone git@github.com:shkh/TrainingAssistant.git
+		% git clone git@github.com:n-oshiro/TrainingAssistant.git
 
 2. Add Jcrop: 
 
